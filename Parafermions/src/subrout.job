@@ -1,0 +1,13 @@
+#!/bin/bash
+#$ -N msq_l14
+#$ -pe openmp 4
+##$-q seq_long
+#$ -l m_mem_free=24G
+#$ -m esa
+##$ -M javad.vahediaghmashhadi@cyu.fr
+#$ -cwd
+#$ -j y
+module load intel
+module load python3
+export OMP_NUM_THREADS=$NSLOTS
+python3 Main.py

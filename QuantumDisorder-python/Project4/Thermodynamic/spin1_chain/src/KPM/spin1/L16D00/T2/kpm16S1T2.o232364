@@ -1,0 +1,20 @@
+loop 1 & time elapsed 7685.786756515503
+loop 2 & time elapsed 7781.011320114136
+loop 3 & time elapsed 7618.681997299194
+loop 4 & time elapsed 7651.946784496307
+loop 5 & time elapsed 7650.579680681229
+loop 6 & time elapsed 7683.410103082657
+loop 7 & time elapsed 7733.095955848694
+loop 8 & time elapsed 7654.511556148529
+loop 9 & time elapsed 7653.997525930405
+loop 10 & time elapsed 7631.614882707596
+main.py:157: RuntimeWarning: overflow encountered in exp
+  Z   = np.sum(mu_T * np.exp(-beta*xk))/K
+main.py:158: RuntimeWarning: overflow encountered in exp
+  E   = np.sum(mu_T * np.exp(-beta*xk) * xk)/K
+main.py:159: RuntimeWarning: overflow encountered in exp
+  E2  = np.sum(mu_T * np.exp(-beta*xk) * xk**2)/K
+main.py:291: RuntimeWarning: invalid value encountered in double_scalars
+  entropy = bt *  (E - freeEnergy)
+main.py:292: RuntimeWarning: invalid value encountered in double_scalars
+  Cv.append(bt**2 * (E2/Z-(E/Z)**2))

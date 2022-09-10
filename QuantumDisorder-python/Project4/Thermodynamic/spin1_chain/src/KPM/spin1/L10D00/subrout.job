@@ -1,0 +1,12 @@
+#!/bin/bash
+#$ -N kpm10K0
+#$ -pe openmp 2
+#$ -l m_mem_free=4G
+#$ -m esa
+#$ -M javad.vahediaghmashhadi@cyu.fr
+#$ -cwd
+#$ -j y
+module load intel
+module load python3
+export OMP_NUM_THREADS=$NSLOTS
+python3 main.py

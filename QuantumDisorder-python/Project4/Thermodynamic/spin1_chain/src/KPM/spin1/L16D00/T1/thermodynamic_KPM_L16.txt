@@ -1,0 +1,12 @@
+Temperature,  F    <E>     <E^2>    Cv    entropy
+============================================
+0.010000   -inf   -inf    inf    nan   nan
+0.010723   -inf   -inf    inf    nan   nan
+0.011498   -inf   -inf    inf    nan   nan
+0.012328   -inf   -inf    inf    nan   nan
+0.013219   -inf   -inf    inf    nan   nan
+0.014175   -inf   -inf    inf    nan   nan
+0.015199   -inf   -inf    inf    nan   nan
+0.016298   -inf   -inf    inf    nan   nan
+0.017475   -inf   -inf    inf    nan   nan
+0.018738   -inf   -inf    inf    nan   nan

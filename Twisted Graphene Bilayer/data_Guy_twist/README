@@ -1,0 +1,19 @@
+MFT results: (march 2021)
+
+column 1: angle (degres)
+column 2: Max m_i
+column 3: total m (per moire) = Sum_i m_i
+column 4: total abs(mi) (per moire) = Sum_i |m_i|
+
+In file Fig_MFT_3mars21.pdf pages 1 and 2: plots are using columns 1 and 4
+
+files:
+magnetization_30-31 : bi(30,31) theta=1.08 unscaled 
+magnetization_25-26 : bi(25,26) theta=1.30 unscaled 
+magnetization_ThetaEff_1.08 : rescaled theta_eff = 1.08
+magnetization_ThetaEff_1.30 : rescaled theta_eff = 1.30
+magnetization_ThetaEff_1.47 : rescaled theta_eff = 1.47
+
+22/03/2021: new file:
+magnetization_22-23 : bi(22,23) theta=1.47 unscaled : NOT CONVERGED ONLY columns 1 and 4 are significant 
+

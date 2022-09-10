@@ -1,0 +1,10 @@
+input
+{
+N      = 40
+beta   = 20.0
+tau    = 0.02
+K      = 1.0
+cutoff = 1E-10
+maxdim = 1000
+
+}

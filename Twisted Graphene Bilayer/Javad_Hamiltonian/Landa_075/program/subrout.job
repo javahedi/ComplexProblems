@@ -1,0 +1,15 @@
+#$ -S /bin/bash
+#$ -N Ja_400_75
+#$ -pe mpi2 2
+#$ -l cpu_model=intel
+##$ -q seq_long
+##$ -q seq_medium
+##$ -q seq_short
+#$ -l m_mem_free=2G
+#$ -m n 
+#$ -cwd
+#$ -j y
+module load intel
+module load python3
+export I_MPI_FABRICS=shm:tcp
+mpiexec.hydra -n $NSLOTS -bootstrap sge python3 Main.py

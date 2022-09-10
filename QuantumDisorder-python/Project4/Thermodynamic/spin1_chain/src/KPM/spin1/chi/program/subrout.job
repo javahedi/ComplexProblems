@@ -1,0 +1,31 @@
+#!/bin/bash
+
+#$ -S /bin/bash
+#
+## Nom du job
+#$ -N kpm12K00
+
+## Queue de travail
+#$ -q seq_long
+
+## Ressource memoire demandee, ici 200 Mo
+#$ -l m_mem_free=12G
+
+## Envoi d’un mail si fin du job / suspension & redemarrage du job / avortement du job
+#$ -m esa
+
+## Adresse de reception des mails
+#$ -M javad.vahediaghmashhadi@cyu.fr 
+
+## Execution du job dans le repertoire courant
+#$ -cwd
+
+## Sortie standard et sortie d’erreur sont redirigees dans un meme fichier
+#$ -j y
+
+## Redemarrage automatique du job (utile en cas d’arret du noeud d’execution)
+#$ -r y
+
+module load intel
+module load python3
+python3 main.py

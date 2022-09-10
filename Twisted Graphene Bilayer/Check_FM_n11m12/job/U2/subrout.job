@@ -1,0 +1,11 @@
+#$ -N Check_FM
+#$ -pe openmp 4
+#$ -l m_mem_free=8G
+#$ -m esa
+#$ -M javad.vahediaghmashhadi@cyu.fr
+#$ -cwd
+#$ -j y
+module load intel
+module load python3
+export OMP_NUM_THREADS=$NSLOTS
+python3 Main.py

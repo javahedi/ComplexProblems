@@ -1,0 +1,773 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 8.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       157,          7]
+NotebookDataLength[     27423,        764]
+NotebookOptionsPosition[     26434,        723]
+NotebookOutlinePosition[     26777,        738]
+CellTagsIndexPosition[     26734,        735]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[TextData[StyleBox["Hamiltonian",
+ FontColor->RGBColor[0, 0, 1]]], "Title",
+ CellFrame->{{0.5, 3}, {3, 0.5}},
+ CellFrameColor->GrayLevel[1],
+ CellChangeTimes->{{3.679533030987021*^9, 3.6795330344266906`*^9}},
+ LineSpacing->{2, 3},
+ Background->GrayLevel[0.85]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ StyleBox["Description",
+  FontSize->20],
+ "\n",
+ StyleBox["We write the Hamiltonia matrix of one Sz-subspace.\nThe \
+Hamiltonian is created using the site-basis.\nThe eigenvalues and eigenstates \
+of the matrix are computed.",
+  FontSize->14]
+}], "Item",
+ CellChangeTimes->{{3.679533139780325*^9, 3.679533159070372*^9}, {
+  3.6795332151460185`*^9, 3.6795332151490183`*^9}}],
+
+Cell[TextData[{
+ "\.9f ",
+ StyleBox["Notation",
+  FontSize->20],
+ "\n",
+ StyleBox["*) chainsize = number of sites\n*) upspins = number of spins \
+pointing up in the z direction\n*) dim = dimension of the subspace being \
+studied =",
+  FontSize->14],
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"(", GridBox[{
+      {
+       StyleBox["chainsize",
+        FontSize->14]},
+      {
+       StyleBox["upspins",
+        FontSize->14]}
+     }], ")"}], TraditionalForm]]],
+ StyleBox["  \n*) Jxy = strength of the flip-flop term between nearest \
+neighbors\n*) Jz = strength of the Ising interaction between nearest \
+neighbors\n*) basis = all possible configurations of up and down spins in the \
+given subspace. These create the site-basis of the subspace.\nThey are \
+obtained by permutation of the state where the first sites have spins \
+pointing up and the others have spins pointing down.\n*) HH = elements of the \
+Hamiltonian\n*) Energy = eigenvalues of the Hamiltonian\n*) Vector = \
+eigenstates of the Hamiltonian\n*) open = determines whether the chain is \
+open or closed. For closed chain, open=0. For open chain, open=1",
+  FontSize->14]
+}], "Item",
+ CellChangeTimes->{3.6795350717872744`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Code for eigenvalues and eigenstates",
+ FontSize->20,
+ FontColor->GrayLevel[0]]], "Subtitle",
+ CellChangeTimes->{3.679535078654829*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", 
+   StyleBox[
+    RowBox[{"Parameters", " ", "of", " ", "the", " ", "Hamiltonian"}],
+    FontColor->RGBColor[1, 0.5, 0]], "*)"}], "\n", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"Clear", "[", 
+     RowBox[{
+     "chainsize", ",", "upspins", ",", "downspins", ",", "dim", ",", "Jxy", 
+      ",", "Jz", ",", "open"}], "]"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"chainsize", "=", "4"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"upspins", "=", "2"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"downspins", "=", 
+     RowBox[{"chainsize", "-", "upspins"}]}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"dim", "=", 
+     RowBox[{
+      RowBox[{"chainsize", "!"}], "/", 
+      RowBox[{"(", 
+       RowBox[{
+        RowBox[{"upspins", "!"}], 
+        RowBox[{"downspins", "!"}]}], ")"}]}]}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"Jxy", "=", "1.0"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"Jz", "=", "1"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"open", "=", "0"}], ";"}], "\n", 
+   RowBox[{"(*", 
+    StyleBox[
+     RowBox[{"Creating", " ", "the", " ", "basis"}],
+     FontColor->RGBColor[1, 0.5, 0]], "*)"}], "\n", 
+   RowBox[{
+    RowBox[{"Clear", "[", 
+     RowBox[{"onebasisvector", ",", "basis"}], "]"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"onebasisvector", "=", 
+     RowBox[{"Flatten", "[", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"Table", "[", 
+         RowBox[{"1", ",", 
+          RowBox[{"{", 
+           RowBox[{"k", ",", "1", ",", "upspins"}], "}"}]}], "]"}], ",", 
+        RowBox[{"Table", "[", 
+         RowBox[{"0", ",", 
+          RowBox[{"{", 
+           RowBox[{"k", ",", "1", ",", "downspins"}], "}"}]}], "]"}]}], "}"}],
+       "]"}]}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"basis", "=", 
+     RowBox[{"Permutations", "[", "onebasisvector", "]"}]}], ";"}], 
+   "\[IndentingNewLine]", "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    StyleBox[
+     RowBox[{"ELEMENTS", " ", "OF", " ", "THE", " ", "HAMILTONIAN"}],
+     FontColor->RGBColor[1, 0.5, 0]], "*)"}], "\n", 
+   RowBox[{"(*", 
+    StyleBox["Initialization",
+     FontColor->RGBColor[1, 0.5, 0]], "*)"}], "\n", 
+   RowBox[{
+    RowBox[{"Clear", "[", "HH", "]"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"Do", "[", 
+     RowBox[{
+      RowBox[{"Do", "[", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"HH", "[", 
+          RowBox[{"i", ",", "j"}], "]"}], "=", "0."}], ",", 
+        RowBox[{"{", 
+         RowBox[{"j", ",", "1", ",", "dim"}], "}"}]}], "]"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"i", ",", "1", ",", "dim"}], "}"}]}], "]"}], ";"}], "\n", 
+   "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    StyleBox[
+     RowBox[{
+      RowBox[{"Diagonal", " ", "elements"}], "-", 
+      RowBox[{"Ising", " ", "interaction"}]}],
+     FontColor->RGBColor[1, 0.5, 0]], "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"Do", "[", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"Do", "[", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{
+          RowBox[{
+           RowBox[{"HH", "[", 
+            RowBox[{"i", ",", "i"}], "]"}], "=", 
+           RowBox[{
+            RowBox[{"HH", "[", 
+             RowBox[{"i", ",", "i"}], "]"}], "+", 
+            RowBox[{
+             RowBox[{"(", 
+              RowBox[{"Jz", "/", "4."}], ")"}], "*", 
+             RowBox[{
+              RowBox[{"(", 
+               RowBox[{"-", "1."}], ")"}], "^", 
+              RowBox[{"(", 
+               RowBox[{
+                RowBox[{"basis", "[", 
+                 RowBox[{"[", 
+                  RowBox[{"i", ",", "k"}], "]"}], "]"}], "+", 
+                RowBox[{"basis", "[", 
+                 RowBox[{"[", 
+                  RowBox[{"i", ",", 
+                   RowBox[{"k", "+", "1"}]}], "]"}], "]"}]}], ")"}]}]}]}]}], 
+          ";"}], "\n", "       ", ",", 
+         RowBox[{"{", 
+          RowBox[{"k", ",", "1", ",", 
+           RowBox[{"chainsize", "-", "1"}]}], "}"}]}], "]"}], ";"}], "\n", 
+      ",", 
+      RowBox[{"{", 
+       RowBox[{"i", ",", "1", ",", "dim"}], "}"}]}], "]"}], ";"}], "\n", 
+   RowBox[{"(*", 
+    RowBox[{
+    "Term", " ", "included", " ", "in", " ", "the", " ", "Ising", " ", 
+     "interaction", " ", "if", " ", "the", " ", "chain", " ", "is", " ", 
+     "closed"}], "*)"}], "\n", 
+   RowBox[{
+    RowBox[{"If", "[", 
+     RowBox[{
+      RowBox[{"open", "==", "0"}], ",", "\[IndentingNewLine]", 
+      RowBox[{"Do", "[", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"HH", "[", 
+          RowBox[{"i", ",", "i"}], "]"}], "=", 
+         RowBox[{
+          RowBox[{"HH", "[", 
+           RowBox[{"i", ",", "i"}], "]"}], "+", 
+          RowBox[{
+           RowBox[{"(", 
+            RowBox[{"Jz", "/", "4."}], ")"}], "*", 
+           RowBox[{
+            RowBox[{"(", 
+             RowBox[{"-", "1."}], ")"}], "^", 
+            RowBox[{"(", 
+             RowBox[{
+              RowBox[{"basis", "[", 
+               RowBox[{"[", 
+                RowBox[{"i", ",", "chainsize"}], "]"}], "]"}], "+", 
+              RowBox[{"basis", "[", 
+               RowBox[{"[", 
+                RowBox[{"i", ",", "1"}], "]"}], "]"}]}], ")"}]}]}]}]}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{"{", 
+         RowBox[{"i", ",", "1", ",", "dim"}], "}"}]}], "]"}]}], "]"}], ";"}], 
+   "\n", "\n", 
+   RowBox[{"(*", 
+    StyleBox[
+     RowBox[{"Off", "-", 
+      RowBox[{"diagonal", " ", "elements"}], "-", "flip", "-", 
+      RowBox[{"flop", " ", "term"}]}],
+     FontColor->RGBColor[1, 0.5, 0]], "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"Clear", "[", 
+     RowBox[{"howmany", ",", "site"}], "]"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"Do", "[", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"Do", "[", "\[IndentingNewLine]", 
+        RowBox[{"(*", 
+         StyleBox["Initialization",
+          FontColor->RGBColor[1, 0.5, 0]], "*)"}], "\n", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"howmany", "=", 
+           RowBox[{"0", "\n", 
+            RowBox[{"Do", "[", 
+             RowBox[{
+              RowBox[{
+               RowBox[{"site", "[", "z", "]"}], "=", "0"}], ",", 
+              RowBox[{"{", 
+               RowBox[{"z", ",", "1", ",", "chainsize"}], "}"}]}], "]"}]}]}], 
+          ";", "\n", 
+          RowBox[{"(*", 
+           StyleBox[
+            RowBox[{
+            "Sites", " ", "where", " ", "states", " ", "i", " ", "and", " ", 
+             "j", " ", "differ"}],
+            FontColor->RGBColor[1, 0.5, 0]], "*)"}], "\n", 
+          RowBox[{"Do", "[", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"If", "[", 
+              RowBox[{
+               RowBox[{
+                RowBox[{"basis", "[", 
+                 RowBox[{"[", 
+                  RowBox[{"i", ",", "k"}], "]"}], "]"}], "\[NotEqual]", 
+                RowBox[{"basis", "[", 
+                 RowBox[{"[", 
+                  RowBox[{"j", ",", "k"}], "]"}], "]"}]}], ",", 
+               RowBox[{"{", 
+                RowBox[{
+                 RowBox[{"howmany", "=", 
+                  RowBox[{"howmany", "+", "1"}]}], ",", 
+                 RowBox[{
+                  RowBox[{"site", "[", "howmany", "]"}], "=", "k"}]}], 
+                "}"}]}], "]"}], ";"}], ",", 
+            RowBox[{"{", 
+             RowBox[{"k", ",", "1", ",", "chainsize"}], "}"}]}], "]"}], ";", 
+          "\n", 
+          RowBox[{"(*", 
+           StyleBox[
+            RowBox[{
+             RowBox[{"Coupling", " ", "matrix", " ", "element"}], "-", 
+             RowBox[{
+             "when", " ", "only", " ", "two", " ", "neighbor", " ", "sites", 
+              " ", "differ"}]}],
+            FontColor->RGBColor[1, 0.5, 0]], "*)"}], "\n", 
+          RowBox[{"If", "[", 
+           RowBox[{
+            RowBox[{"howmany", "==", "2"}], ",", 
+            RowBox[{"If", "[", 
+             RowBox[{
+              RowBox[{
+               RowBox[{
+                RowBox[{"site", "[", "2", "]"}], "-", 
+                RowBox[{"site", "[", "1", "]"}]}], "==", "1"}], ",", 
+              RowBox[{"{", 
+               RowBox[{
+                RowBox[{
+                 RowBox[{"HH", "[", 
+                  RowBox[{"i", ",", "j"}], "]"}], "=", 
+                 RowBox[{
+                  RowBox[{"HH", "[", 
+                   RowBox[{"i", ",", "j"}], "]"}], "+", 
+                  RowBox[{"Jxy", "/", "2."}]}]}], ",", 
+                RowBox[{
+                 RowBox[{"HH", "[", 
+                  RowBox[{"j", ",", "i"}], "]"}], "=", 
+                 RowBox[{
+                  RowBox[{"HH", "[", 
+                   RowBox[{"j", ",", "i"}], "]"}], "+", 
+                  RowBox[{"Jxy", "/", "2."}]}]}]}], "}"}]}], "]"}]}], "]"}], 
+          ";", "\n", 
+          RowBox[{"(*", 
+           StyleBox[
+            RowBox[{
+            "Additional", " ", "term", " ", "for", " ", "closed", " ", 
+             "system"}],
+            FontColor->RGBColor[1, 0.5, 0]], "*)"}], "\n", 
+          RowBox[{"If", "[", 
+           RowBox[{
+            RowBox[{"open", "==", "0"}], ",", " ", 
+            RowBox[{"If", "[", 
+             RowBox[{
+              RowBox[{
+               RowBox[{
+                RowBox[{"site", "[", "2", "]"}], "-", 
+                RowBox[{"site", "[", "1", "]"}]}], "==", 
+               RowBox[{"chainsize", "-", "1"}]}], ",", 
+              RowBox[{"{", 
+               RowBox[{
+                RowBox[{
+                 RowBox[{"HH", "[", 
+                  RowBox[{"i", ",", "j"}], "]"}], "=", 
+                 RowBox[{
+                  RowBox[{"HH", "[", 
+                   RowBox[{"i", ",", "j"}], "]"}], "+", 
+                  RowBox[{"Jxy", "/", "2."}]}]}], ",", 
+                RowBox[{
+                 RowBox[{"HH", "[", 
+                  RowBox[{"j", ",", "i"}], "]"}], "=", 
+                 RowBox[{
+                  RowBox[{"HH", "[", 
+                   RowBox[{"j", ",", "i"}], "]"}], "+", 
+                  RowBox[{"Jxy", "/", "2."}]}]}]}], "}"}]}], "]"}]}], "]"}], 
+          ";"}], "\n", ",", 
+         RowBox[{"{", 
+          RowBox[{"j", ",", 
+           RowBox[{"i", "+", "1"}], ",", "dim"}], "}"}]}], "]"}], ";"}], "\n",
+       ",", 
+      RowBox[{"{", 
+       RowBox[{"i", ",", "1", ",", 
+        RowBox[{"dim", "-", "1"}]}], "}"}]}], "]"}], ";"}], 
+   "\[IndentingNewLine]", "\[IndentingNewLine]", 
+   RowBox[{"(*", " ", 
+    StyleBox[
+     RowBox[{"TOTAL", " ", "HAMILTONIAN", " ", "AND", " ", "DIAGONALIZATION"}],
+     FontColor->RGBColor[1, 0.5, 0]], " ", "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"Clear", "[", 
+     RowBox[{"Hamiltonian", ",", "Energy", ",", "Vector"}], "]"}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"Hamiltonian", "=", 
+     RowBox[{"Table", "[", 
+      RowBox[{
+       RowBox[{"Table", "[", 
+        RowBox[{
+         RowBox[{"HH", "[", 
+          RowBox[{"i", ",", "j"}], "]"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"j", ",", "1", ",", "dim"}], "}"}]}], "]"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"i", ",", "dim"}], "}"}]}], "]"}]}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"Energy", "=", 
+     RowBox[{"Eigenvalues", "[", "Hamiltonian", "]"}]}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"Vector", "=", 
+     RowBox[{"Eigenvectors", "[", "Hamiltonian", "]"}]}], ";"}], 
+   "\[IndentingNewLine]"}]}]], "Input",
+ CellChangeTimes->{{3.6795333585821657`*^9, 3.6795333585836687`*^9}, {
+   3.679533396218373*^9, 3.6795334196875467`*^9}, {3.679533461188119*^9, 
+   3.679533618404118*^9}, 3.6795336768492837`*^9, 3.679533740286551*^9, {
+   3.6795338443805666`*^9, 3.679533958584165*^9}, {3.679534057149863*^9, 
+   3.6795342712700076`*^9}, {3.6795343365179567`*^9, 3.679534486056728*^9}, {
+   3.6795345269005313`*^9, 3.679534779925764*^9}, {3.6795350946993437`*^9, 
+   3.679535095431633*^9}, {3.6795352150600615`*^9, 3.679535242416566*^9}, {
+   3.6795360800587826`*^9, 3.6795361676559963`*^9}, {3.679536207231417*^9, 
+   3.6795362865241733`*^9}, {3.679536316796687*^9, 3.679536322427965*^9}, {
+   3.679536353037857*^9, 3.6795365946055307`*^9}, {3.679536628139965*^9, 
+   3.6795366752277956`*^9}, 3.6795383761648226`*^9, 3.6795384942702312`*^9, {
+   3.6795802531426525`*^9, 3.67958027934999*^9}, 3.6795803242304*^9}]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Histogram",
+ FontColor->RGBColor[0, 0, 1]]], "Title",
+ CellChangeTimes->{3.6795348380308084`*^9},
+ Background->GrayLevel[0.85]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ "\.9f ",
+ StyleBox["Description",
+  FontSize->20],
+ "\n",
+ StyleBox["We make histograms for the diagonal elements of the Hamiltonian \
+and for its eigenvalues.\nThe histograms provide us with information on what \
+to expect for the dynamics of the given system.\nThe choice of the bin width \
+is arbitrary.\nHistogram for diagonal elments: a very small value is a good \
+choice, or instead one can use the analytical\nexpressions provided in the \
+paper.\nHistogram for the eigenvalues: have a look at the minimum and maximum \
+values of the eigenvalues before deciding a good value.\nNOTE: Mathematica \
+has a command to make histograms, but we found it better to create our own \
+procedure.\n(The code provided here is used to obtain the top of Figure 1 in \
+the paper).",
+  FontSize->14]
+}], "Item",
+ CellChangeTimes->{{3.6795348835124526`*^9, 3.6795348980442195`*^9}, {
+  3.67953494876171*^9, 3.679534951342976*^9}}],
+
+Cell[TextData[{
+ "\.9f ",
+ StyleBox["Notation",
+  FontSize->20],
+ "\n",
+ StyleBox["*) binsize = width of each bin\n*) binedge = the extremes of the \
+bin\n*) Nofbins = number of bins\n*) Num = how many states contribute to the \
+height of each bin",
+  FontSize->14]
+}], "Item",
+ CellChangeTimes->{{3.6795348835124526`*^9, 3.6795348904289293`*^9}, {
+  3.6795350271617637`*^9, 3.6795350455303097`*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ StyleBox["Code for Histogram\n",
+  FontSize->20],
+ StyleBox["Histogram of the diagonal elements of the Hamiltonia",
+  FontSize->14]
+}], "Subtitle",
+ CellChangeTimes->{
+  3.679535051134478*^9, {3.6795367004411926`*^9, 3.6795367390477495`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", 
+   StyleBox[
+    RowBox[{"List", " ", "of", " ", "diagonal", " ", "elements"}],
+    FontColor->RGBColor[1, 0.5, 0]], "*)"}], "\n", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"Clear", "[", "diagE", "]"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"diagE", "=", 
+     RowBox[{"Sort", "[", 
+      RowBox[{"Table", "[", 
+       RowBox[{
+        RowBox[{"HH", "[", 
+         RowBox[{"i", ",", "i"}], "]"}], ",", 
+        RowBox[{"{", 
+         RowBox[{"i", ",", "1", ",", "dim"}], "}"}]}], "]"}], "]"}]}], ";"}], 
+   "\n", 
+   RowBox[{"(*", 
+    StyleBox[
+     RowBox[{"Parameters", " ", "for", " ", "the", " ", "histogram"}],
+     FontColor->RGBColor[1, 0.5, 0]], "*)"}], "\n", 
+   RowBox[{
+    RowBox[{"Clear", "[", 
+     RowBox[{"binsize", ",", "minDiagE", ",", "maxDiagE", ",", "Nofbins"}], 
+     "]"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"binsize", "=", "0.01"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"minDiagE", "=", 
+     RowBox[{"Min", "[", "diagE", "]"}]}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"maxDiagE", "=", 
+     RowBox[{"Max", "[", "diagE", "]"}]}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"Nofbins", "=", 
+     RowBox[{
+      RowBox[{"Floor", "[", 
+       RowBox[{
+        RowBox[{"(", 
+         RowBox[{"maxDiagE", "-", "minDiagE"}], ")"}], "/", "binsize"}], 
+       "]"}], "+", "1"}]}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"Clear", "[", "binedge", "]"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"binedge", "[", "1", "]"}], "=", "minDiagE"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"Do", "[", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"binedge", "[", "k", "]"}], "=", 
+       RowBox[{
+        RowBox[{"binedge", "[", 
+         RowBox[{"k", "-", "1"}], "]"}], "+", "binsize"}]}], ",", 
+      RowBox[{"{", 
+       RowBox[{"k", ",", "2", ",", 
+        RowBox[{"Nofbins", "+", "1"}]}], "}"}]}], "]"}], ";"}], "\n", "\n", 
+   RowBox[{"(*", 
+    StyleBox[
+     RowBox[{
+     "Number", " ", "of", " ", "states", " ", "in", " ", "each", " ", "bin"}],
+     FontColor->RGBColor[1, 0.5, 0]], "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"Clear", "[", "Num", "]"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"Do", "[", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"Num", "[", "k", "]"}], "=", "0"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"k", ",", "1", ",", "Nofbins"}], "}"}]}], "]"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"Do", "[", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"Do", "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"If", "[", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"binedge", "[", "k", "]"}], "\[LessSlantEqual]", 
+             RowBox[{"HH", "[", 
+              RowBox[{"j", ",", "j"}], "]"}], "<", 
+             RowBox[{"binedge", "[", 
+              RowBox[{"k", "+", "1"}], "]"}]}], ",", 
+            RowBox[{
+             RowBox[{"Num", "[", "k", "]"}], "=", 
+             RowBox[{
+              RowBox[{"Num", "[", "k", "]"}], "+", "1"}]}]}], "]"}], ";"}], 
+         "\n", ",", 
+         RowBox[{"{", 
+          RowBox[{"k", ",", "1", ",", "Nofbins"}], "}"}]}], "]"}], ";"}], 
+      "\n", ",", 
+      RowBox[{"{", 
+       RowBox[{"j", ",", "1", ",", "dim"}], "}"}]}], "]"}], ";"}], 
+   "\[IndentingNewLine]"}]}]], "Input",
+ CellChangeTimes->{{3.6795367528640814`*^9, 3.679536850849822*^9}, {
+  3.679536884454214*^9, 3.679537052676523*^9}}]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["\.9f Plot of the histogram of the diagonal elements \
+of the Hamiltonian",
+ FontSize->18]], "Title",
+ CellChangeTimes->{3.6795374700395765`*^9}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", 
+   StyleBox["Histogram",
+    FontColor->RGBColor[1, 0.5, 0]], "*)"}], "\n", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"Clear", "[", "histData", "]"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"histData", "=", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"binedge", "[", "1", "]"}], ",", "0"}], "}"}], "}"}]}], ";"}],
+    "\n", 
+   RowBox[{
+    RowBox[{"Do", "[", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"histData", "=", 
+        RowBox[{"Append", "[", 
+         RowBox[{"histData", ",", 
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"binedge", "[", "k", "]"}], ",", 
+            RowBox[{"Num", "[", "k", "]"}]}], "}"}]}], "]"}]}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"histData", "=", 
+        RowBox[{"Append", "[", 
+         RowBox[{"histData", ",", 
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"binedge", "[", 
+             RowBox[{"k", "+", "1"}], "]"}], ",", 
+            RowBox[{"Num", "[", "k", "]"}]}], "}"}]}], "]"}]}], ";"}], "\n", 
+      ",", 
+      RowBox[{"{", 
+       RowBox[{"k", ",", "1", ",", "Nofbins"}], "}"}]}], "]"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"histData", "=", 
+     RowBox[{"Append", "[", 
+      RowBox[{"histData", ",", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"binedge", "[", 
+          RowBox[{"Nofbins", "+", "1"}], "]"}], ",", "0"}], "}"}]}], "]"}]}], 
+    ";"}], "\[IndentingNewLine]", 
+   RowBox[{"ListPlot", "[", 
+    RowBox[{"histData", ",", 
+     RowBox[{"Joined", "\[Rule]", "True"}], ",", " ", 
+     RowBox[{"LabelStyle", "\[Rule]", 
+      RowBox[{"Directive", "[", 
+       RowBox[{"Black", ",", "Bold", ",", "Medium"}], "]"}]}], ",", 
+     RowBox[{"PlotStyle", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{"Red", ",", "Thick"}], "}"}]}], ",", 
+     RowBox[{"Frame", "\[Rule]", "True"}], ",", 
+     RowBox[{"FrameLabel", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"\"\<Number of State\>\"", ",", "\"\<\>\""}], "}"}], ",", 
+        RowBox[{"{", 
+         RowBox[{
+         "\"\< Diagonal element of H (J\[CapitalDelta])\>\"", ",", 
+          "\"\<Diagonal element(J\[CapitalDelta]=1)\>\""}], "}"}]}], "}"}]}], 
+     ",", 
+     RowBox[{"Filling", "\[Rule]", "Axis"}], ",", 
+     RowBox[{"PlotRange", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"-", "1.3"}], ",", ".3"}], "}"}], ",", 
+        RowBox[{"{", 
+         RowBox[{"0", ",", "4.35"}], "}"}]}], "}"}]}]}], "]"}]}]}]], "Input",
+ CellChangeTimes->{{3.679537458131361*^9, 3.6795374623495083`*^9}, {
+  3.679537497721309*^9, 3.679537618582145*^9}, {3.6795377102907543`*^9, 
+  3.6795377604487667`*^9}, {3.679537791726553*^9, 3.679537884875484*^9}, {
+  3.6795379153145223`*^9, 3.679537939308694*^9}, {3.679537990550938*^9, 
+  3.679538006199169*^9}, {3.6795380469597087`*^9, 3.6795380984805293`*^9}, {
+  3.6795382156322937`*^9, 3.6795382171675653`*^9}, {3.6795382724309964`*^9, 
+  3.679538342944036*^9}, {3.6795803831444654`*^9, 3.6795804301663623`*^9}, {
+  3.679580497255436*^9, 3.6795805477040367`*^9}}],
+
+Cell[BoxData[
+ GraphicsBox[GraphicsComplexBox[CompressedData["
+1:eJx11k9I03EYx/EfnUKCpEZ0KNGL7FJEdYhY5CGzi1HRIWqH6B+dzKNIh4oJ
+HSI7hNglxDwUxCgIWxBlZqS2Sms6+2ezspZ/SqSgU7XvOwiC3l8Y4wVje37P
+83y+rOrAsV2HF0RRlC29wvufM3c3+uf8dU26bqI5lv5qjpKtvd/jSXdZ/lLj
+pjJ3pqJlemfmi/oIxx2jIHeoprV3Vl0qplSRm3Iq3FnOjLqZgtxxGuYeDe3K
+T6tToZwW99p14bgLFDSlPkvD3AkG6p6inM/q9gvhuLeGdatzf6NhRXUnA3Xv
+YOHcP3+F80l9lTy495IH90Ly4O5m4T6qD5EH9xLy4O4hD5PqBvLgXkEe3IPk
+4YO6iTy4q8mDO0ce3qtPkQf3GvLgHicP79RnyIN7I3lwF8nDhLqNPLi3kAf3
+PHkoqDvIg3s7eXD/IA9v1bvZd/c19nlcvYh9dR9lH9+o+9i31+pK9sl9nH15
+pR6j3S/V65m3+xzzfKGeYV5j6m3Mw93FfZRXR9w37iT3yag6w30xoo5xH7gb
+yXtOnaWc5+o4eXWnyOMzdYG8DasT5MndTl6G1EXy8FTdwb4/Ue9hnx+ry9nX
+rLqffRxUn2DfBtQb2Kd+9Rx/SB6qL7MPD9T7mXefejnzvK8eYl731KeZR4/6
+JP2+o57fF/p5W32Qft1S5+jHTXUtz3tD3c3zXFfXU29avZp6rqgX83td6sLK
+8H0X1Z1Lw+fPqwf4w5ESl9fwVvko8X9H0aplfH6z+TcXrKpl
+   "], {{{}, 
+     {Hue[0.67, 0.6, 0.6], Opacity[0.2], EdgeForm[None], 
+      GraphicsGroupBox[
+       PolygonBox[{{1, 4, 3, 2}, {199, 202, 201, 200}}]]}, {}, {}}, {{}, {}, 
+     {RGBColor[1, 0, 0], Thickness[Large], 
+      LineBox[{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 
+       19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36,
+        37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 
+       54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71,
+        72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 
+       89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 
+       105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 
+       119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 
+       133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 
+       147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 
+       161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 
+       175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 
+       189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 
+       203, 204}]}}}],
+  AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+  Axes->True,
+  AxesOrigin->{0, 0},
+  Frame->True,
+  FrameLabel->{{
+     FormBox["\"Number of State\"", TraditionalForm], 
+     FormBox["\"\"", TraditionalForm]}, {
+     FormBox[
+     "\" Diagonal element of H (J\[CapitalDelta])\"", TraditionalForm], 
+     FormBox["\"Diagonal element(J\[CapitalDelta]=1)\"", TraditionalForm]}},
+  LabelStyle->Directive[
+    GrayLevel[0], Bold, Medium],
+  PlotRange->{{-1.3, 0.3}, {0, 4.35}},
+  PlotRangeClipping->True,
+  PlotRangePadding->{Automatic, Automatic}]], "Output",
+ CellChangeTimes->{{3.679538320353032*^9, 3.6795383451821904`*^9}, 
+   3.67953838892698*^9, {3.6795384750446634`*^9, 3.679538477408382*^9}, 
+   3.6795385103201466`*^9, 3.679580298516107*^9, 3.6795803325796566`*^9, 
+   3.6795803874660783`*^9, {3.67958052837929*^9, 3.679580549163245*^9}}]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{1584, 763},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+FrontEndVersion->"8.0 for Microsoft Windows (64-bit) (November 7, 2010)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[579, 22, 264, 6, 102, "Title"],
+Cell[CellGroupData[{
+Cell[868, 32, 390, 10, 81, "Item"],
+Cell[1261, 44, 1191, 30, 234, "Item"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[2489, 79, 159, 3, 45, "Subtitle"],
+Cell[2651, 84, 12168, 327, 1052, "Input"]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[14868, 417, 151, 3, 99, "Title"],
+Cell[CellGroupData[{
+Cell[15044, 424, 937, 18, 166, "Item"],
+Cell[15984, 444, 400, 11, 98, "Item"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[16421, 460, 259, 7, 62, "Subtitle"],
+Cell[16683, 469, 3358, 100, 412, "Input"]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[20090, 575, 168, 3, 61, "Title"],
+Cell[CellGroupData[{
+Cell[20283, 582, 3162, 83, 212, "Input"],
+Cell[23448, 667, 2958, 52, 266, "Output"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)

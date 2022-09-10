@@ -1,0 +1,17 @@
+file=rdm
+gnuplot << EOF
+
+
+set term post eps enh color font ",16"
+set output "$file.eps"
+set logscale y
+set xlabel "order of the RDM eigenvalues"
+set ylabel "RDM eigenvalues"
+
+pl "rdm_eig.dat" u 2:(\$3==1 ? \$1:1/0) w p t "1.sweep",\
+    "rdm_eig.dat" u 2:(\$3==2 ? \$1:1/0) w p t "2.sweep,\
+    "rdm_eig.dat" u 2:(\$3==3 ? \$1:1/0) w p t "3.sweep,\
+    "rdm_eig.dat" u 2:(\$3==4? \$1:1/0) w p t "4.sweep"
+
+EOF
+epstopdf $file.eps

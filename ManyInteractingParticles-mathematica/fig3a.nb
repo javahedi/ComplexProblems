@@ -1,0 +1,585 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 8.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       157,          7]
+NotebookDataLength[     22228,        576]
+NotebookOptionsPosition[     21696,        552]
+NotebookOutlinePosition[     22039,        567]
+CellTagsIndexPosition[     21996,        564]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[TextData[StyleBox["Average IPR vs Jz",
+ FontColor->RGBColor[0, 0, 1]]], "Title",
+ CellChangeTimes->{{3.679541236745329*^9, 3.6795412468222637`*^9}},
+ Background->GrayLevel[0.85]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ "\.9f ",
+ StyleBox["Description",
+  FontSize->20],
+ "\n",
+ StyleBox["The Inverse Participation Ratio (IPR) of each eigenstate measures \
+how much spread it is in a particular basis. A high value of IPR means that \
+the eigenstate is spread out in that basis, while a low value of IPR means \
+that the state is more localized.                                             \
+                      Here we choose the site-basis and compute the average \
+value of the IPR\[CloseCurlyQuote]s of all eigenstates for each value of Jz. \
+(The code provided here is used to obtain the bottom of Figure 1 in the \
+paper)",
+  FontSize->14]
+}], "Item",
+ CellChangeTimes->{{3.6795412789718*^9, 3.6795413642944946`*^9}}],
+
+Cell[TextData[{
+ "\.9f ",
+ StyleBox["Notation",
+  FontSize->20],
+ "\n",
+ StyleBox["*) IPR = Inverse Participation Ratio\n*) AveIPR = average value of \
+IPR for all eigenstates",
+  FontSize->14]
+}], "Item",
+ CellChangeTimes->{{3.6795412789718*^9, 3.6795412872719145`*^9}}],
+
+Cell[TextData[StyleBox["\.9f Code for IPR vs Jz",
+ FontSize->20]], "Item",
+ CellChangeTimes->{{3.6795412789718*^9, 3.679541288438066*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", 
+   StyleBox[
+    RowBox[{"Parameters", " ", "of", " ", "the", " ", "Hamiltonian"}],
+    FontColor->RGBColor[1, 0.5, 0]], "*)"}], "\n", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"Clear", "[", 
+     RowBox[{
+     "chainsize", ",", "upspins", ",", "downspins", ",", "dim", ",", "Jxy", 
+      ",", "Jz", ",", "open"}], "]"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"chainsize", "=", "10"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"upspins", "=", 
+     RowBox[{"chainsize", "/", "2"}]}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"downspins", "=", 
+     RowBox[{"chainsize", "-", "upspins"}]}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"dim", "=", 
+     RowBox[{
+      RowBox[{"chainsize", "!"}], "/", 
+      RowBox[{"(", 
+       RowBox[{
+        RowBox[{"upspins", "!"}], 
+        RowBox[{"downspins", "!"}]}], ")"}]}]}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"Jxy", "=", "1.0"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"Jz", "=", "0.5"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"open", "=", "1"}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    StyleBox[
+     RowBox[{"Creating", " ", "the", " ", "basis"}],
+     FontColor->RGBColor[1, 0.5, 0]], "*)"}], "\n", 
+   RowBox[{
+    RowBox[{"Clear", "[", 
+     RowBox[{"onebasisvector", ",", "basis"}], "]"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"onebasisvector", "=", 
+     RowBox[{"Flatten", "[", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"Table", "[", 
+         RowBox[{"1", ",", 
+          RowBox[{"{", 
+           RowBox[{"k", ",", "1", ",", "upspins"}], "}"}]}], "]"}], ",", 
+        RowBox[{"Table", "[", 
+         RowBox[{"0", ",", 
+          RowBox[{"{", 
+           RowBox[{"k", ",", "1", ",", "downspins"}], "}"}]}], "]"}]}], "}"}],
+       "]"}]}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"basis", "=", 
+     RowBox[{"Permutations", "[", "onebasisvector", "]"}]}], ";"}], 
+   "\[IndentingNewLine]", "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    StyleBox[
+     RowBox[{"ELEMENTS", " ", "OF", " ", "THE", " ", "HAMILTONIAN"}],
+     FontColor->RGBColor[1, 0.5, 0]], "*)"}], "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    StyleBox["Initialization",
+     FontColor->RGBColor[1, 0.5, 0]], "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"Clear", "[", "HH", "]"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"Do", "[", 
+     RowBox[{
+      RowBox[{"Do", "[", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"HH", "[", 
+          RowBox[{"i", ",", "j"}], "]"}], "=", "0."}], ",", 
+        RowBox[{"{", 
+         RowBox[{"j", ",", "1", ",", "dim"}], "}"}]}], "]"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"i", ",", "1", ",", "dim"}], "}"}]}], "]"}], ";"}], "\n", 
+   "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    StyleBox[
+     RowBox[{
+      RowBox[{"Diagonal", " ", "elements"}], "-", 
+      RowBox[{"Ising", " ", "interaction"}]}],
+     FontColor->RGBColor[1, 0.5, 0]], "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"Do", "[", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"Do", "[", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{
+          RowBox[{
+           RowBox[{"HH", "[", 
+            RowBox[{"i", ",", "i"}], "]"}], "=", 
+           RowBox[{
+            RowBox[{"HH", "[", 
+             RowBox[{"i", ",", "i"}], "]"}], "+", 
+            RowBox[{
+             RowBox[{"(", 
+              RowBox[{"Jz", "/", "4."}], ")"}], "*", 
+             RowBox[{
+              RowBox[{"(", 
+               RowBox[{"-", "1."}], ")"}], "^", 
+              RowBox[{"(", 
+               RowBox[{
+                RowBox[{"basis", "[", 
+                 RowBox[{"[", 
+                  RowBox[{"i", ",", "k"}], "]"}], "]"}], "+", 
+                RowBox[{"basis", "[", 
+                 RowBox[{"[", 
+                  RowBox[{"i", ",", 
+                   RowBox[{"k", "+", "1"}]}], "]"}], "]"}]}], ")"}]}]}]}]}], 
+          ";"}], "\n", "       ", ",", 
+         RowBox[{"{", 
+          RowBox[{"k", ",", "1", ",", 
+           RowBox[{"chainsize", "-", "1"}]}], "}"}]}], "]"}], ";"}], "\n", 
+      ",", 
+      RowBox[{"{", 
+       RowBox[{"i", ",", "1", ",", "dim"}], "}"}]}], "]"}], ";"}], "\n", 
+   RowBox[{"(*", 
+    StyleBox[
+     RowBox[{
+     "Term", " ", "included", " ", "in", " ", "the", " ", "Ising", " ", 
+      "interaction", " ", "if", " ", "the", " ", "chain", " ", "is", " ", 
+      "closed"}],
+     FontColor->RGBColor[1, 0.5, 0]], "*)"}], "\n", 
+   RowBox[{
+    RowBox[{"If", "[", 
+     RowBox[{
+      RowBox[{"open", "==", "0"}], ",", "\[IndentingNewLine]", 
+      RowBox[{"Do", "[", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"HH", "[", 
+          RowBox[{"i", ",", "i"}], "]"}], "=", 
+         RowBox[{
+          RowBox[{"HH", "[", 
+           RowBox[{"i", ",", "i"}], "]"}], "+", 
+          RowBox[{
+           RowBox[{"(", 
+            RowBox[{"Jz", "/", "4."}], ")"}], "*", 
+           RowBox[{
+            RowBox[{"(", 
+             RowBox[{"-", "1."}], ")"}], "^", 
+            RowBox[{"(", 
+             RowBox[{
+              RowBox[{"basis", "[", 
+               RowBox[{"[", 
+                RowBox[{"i", ",", "chainsize"}], "]"}], "]"}], "+", 
+              RowBox[{"basis", "[", 
+               RowBox[{"[", 
+                RowBox[{"i", ",", "1"}], "]"}], "]"}]}], ")"}]}]}]}]}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{"{", 
+         RowBox[{"i", ",", "1", ",", "dim"}], "}"}]}], "]"}]}], "]"}], ";"}], 
+   "\n", "\n", 
+   RowBox[{"(*", 
+    StyleBox[
+     RowBox[{"Off", "-", 
+      RowBox[{"diagonal", " ", "elements"}], "-", "flip", "-", 
+      RowBox[{"flop", " ", "term"}]}],
+     FontColor->RGBColor[1, 0.5, 0]], "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"Clear", "[", 
+     RowBox[{"howmany", ",", "site"}], "]"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"Do", "[", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"Do", "[", "\[IndentingNewLine]", 
+        RowBox[{"(*", 
+         StyleBox["Initialization",
+          FontColor->RGBColor[1, 0.5, 0]], "*)"}], "\n", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"howmany", "=", 
+           RowBox[{"0", "\n", 
+            RowBox[{"Do", "[", 
+             RowBox[{
+              RowBox[{
+               RowBox[{"site", "[", "z", "]"}], "=", "0"}], ",", 
+              RowBox[{"{", 
+               RowBox[{"z", ",", "1", ",", "chainsize"}], "}"}]}], "]"}]}]}], 
+          ";", "\n", 
+          RowBox[{"(*", 
+           StyleBox[
+            RowBox[{
+            "Sites", " ", "where", " ", "states", " ", "i", " ", "and", " ", 
+             "j", " ", "differ"}],
+            FontColor->RGBColor[1, 0.5, 0]], "*)"}], "\n", 
+          RowBox[{"Do", "[", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"If", "[", 
+              RowBox[{
+               RowBox[{
+                RowBox[{"basis", "[", 
+                 RowBox[{"[", 
+                  RowBox[{"i", ",", "k"}], "]"}], "]"}], "\[NotEqual]", 
+                RowBox[{"basis", "[", 
+                 RowBox[{"[", 
+                  RowBox[{"j", ",", "k"}], "]"}], "]"}]}], ",", 
+               RowBox[{"{", 
+                RowBox[{
+                 RowBox[{"howmany", "=", 
+                  RowBox[{"howmany", "+", "1"}]}], ",", 
+                 RowBox[{
+                  RowBox[{"site", "[", "howmany", "]"}], "=", "k"}]}], 
+                "}"}]}], "]"}], ";"}], ",", 
+            RowBox[{"{", 
+             RowBox[{"k", ",", "1", ",", "chainsize"}], "}"}]}], "]"}], ";", 
+          "\n", 
+          RowBox[{"(*", 
+           StyleBox[
+            RowBox[{
+             RowBox[{"Coupling", " ", "matrix", " ", "element"}], "-", 
+             RowBox[{
+             "when", " ", "only", " ", "two", " ", "neighbor", " ", "sites", 
+              " ", "differ"}]}],
+            FontColor->RGBColor[1, 0.5, 0]], "*)"}], "\n", 
+          RowBox[{"If", "[", 
+           RowBox[{
+            RowBox[{"howmany", "==", "2"}], ",", 
+            RowBox[{"If", "[", 
+             RowBox[{
+              RowBox[{
+               RowBox[{
+                RowBox[{"site", "[", "2", "]"}], "-", 
+                RowBox[{"site", "[", "1", "]"}]}], "==", "1"}], ",", 
+              RowBox[{"{", 
+               RowBox[{
+                RowBox[{
+                 RowBox[{"HH", "[", 
+                  RowBox[{"i", ",", "j"}], "]"}], "=", 
+                 RowBox[{
+                  RowBox[{"HH", "[", 
+                   RowBox[{"i", ",", "j"}], "]"}], "+", 
+                  RowBox[{"Jxy", "/", "2."}]}]}], ",", 
+                RowBox[{
+                 RowBox[{"HH", "[", 
+                  RowBox[{"j", ",", "i"}], "]"}], "=", 
+                 RowBox[{
+                  RowBox[{"HH", "[", 
+                   RowBox[{"j", ",", "i"}], "]"}], "+", 
+                  RowBox[{"Jxy", "/", "2."}]}]}]}], "}"}]}], "]"}]}], "]"}], 
+          ";", "\n", 
+          RowBox[{"(*", 
+           StyleBox[
+            RowBox[{
+            "Additional", " ", "term", " ", "for", " ", "closed", " ", 
+             "system"}],
+            FontColor->RGBColor[1, 0.5, 0]], "*)"}], 
+          RowBox[{"If", "[", 
+           RowBox[{
+            RowBox[{"open", "==", "0"}], ",", " ", 
+            RowBox[{"If", "[", 
+             RowBox[{
+              RowBox[{
+               RowBox[{
+                RowBox[{"site", "[", "2", "]"}], "-", 
+                RowBox[{"site", "[", "1", "]"}]}], "==", 
+               RowBox[{"chainsize", "-", "1"}]}], ",", 
+              RowBox[{"{", 
+               RowBox[{
+                RowBox[{
+                 RowBox[{"HH", "[", 
+                  RowBox[{"i", ",", "j"}], "]"}], "=", 
+                 RowBox[{
+                  RowBox[{"HH", "[", 
+                   RowBox[{"i", ",", "j"}], "]"}], "+", 
+                  RowBox[{"Jxy", "/", "2."}]}]}], ",", 
+                RowBox[{
+                 RowBox[{"HH", "[", 
+                  RowBox[{"j", ",", "i"}], "]"}], "=", 
+                 RowBox[{
+                  RowBox[{"HH", "[", 
+                   RowBox[{"j", ",", "i"}], "]"}], "+", 
+                  RowBox[{"Jxy", "/", "2."}]}]}]}], "}"}]}], "]"}]}], "]"}], 
+          ";"}], "\n", ",", 
+         RowBox[{"{", 
+          RowBox[{"j", ",", 
+           RowBox[{"i", "+", "1"}], ",", "dim"}], "}"}]}], "]"}], ";"}], "\n",
+       ",", 
+      RowBox[{"{", 
+       RowBox[{"i", ",", "1", ",", 
+        RowBox[{"dim", "-", "1"}]}], "}"}]}], "]"}], ";"}], 
+   "\[IndentingNewLine]", "\[IndentingNewLine]", 
+   RowBox[{"(*", " ", 
+    StyleBox[
+     RowBox[{"TOTAL", " ", "HAMILTONIAN", " ", "AND", " ", "DIAGONALIZATION"}],
+     FontColor->RGBColor[1, 0.5, 0]], " ", "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"Clear", "[", 
+     RowBox[{"Hamiltonian", ",", "Energy", ",", "Vector"}], "]"}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"Hamiltonian", "=", 
+     RowBox[{"Table", "[", 
+      RowBox[{
+       RowBox[{"Table", "[", 
+        RowBox[{
+         RowBox[{"HH", "[", 
+          RowBox[{"i", ",", "j"}], "]"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"j", ",", "1", ",", "dim"}], "}"}]}], "]"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"i", ",", "dim"}], "}"}]}], "]"}]}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"Energy", "=", 
+     RowBox[{"Eigenvalues", "[", "Hamiltonian", "]"}]}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"Vector", "=", 
+     RowBox[{"Eigenvectors", "[", "Hamiltonian", "]"}]}], ";"}], "\n", 
+   "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    StyleBox[
+     RowBox[{"Inverse", " ", "Participation", " ", 
+      RowBox[{"Ratio", ":", "IPR"}]}],
+     FontColor->RGBColor[1, 0.5, 0]], "*)"}], "\[IndentingNewLine]", "\n", 
+   RowBox[{
+    RowBox[{"Clear", "[", "IPR", "]"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"Do", "[", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{
+       RowBox[{
+        RowBox[{"IPR", "[", "i", "]"}], "=", 
+        RowBox[{"1", "/", 
+         RowBox[{"Sum", "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Vector", "[", 
+             RowBox[{"[", 
+              RowBox[{"i", ",", "k"}], "]"}], "]"}], "^", "4"}], ",", 
+           RowBox[{"{", 
+            RowBox[{"k", ",", "1", ",", "dim"}], "}"}]}], "]"}]}]}], ";"}], 
+      "\n", ",", 
+      RowBox[{"{", 
+       RowBox[{"i", ",", "1", ",", "dim"}], "}"}]}], "]"}], ";"}], 
+   "\[IndentingNewLine]", "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    StyleBox[
+     RowBox[{"Plot", ":", 
+      RowBox[{"IPR", " ", "vs", " ", "Jz"}]}],
+     FontColor->RGBColor[1, 0.5, 0]], "*)"}], "\n", 
+   RowBox[{
+    RowBox[{"Clear", "[", "tab", "]"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"tab", "=", 
+     RowBox[{"Table", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"Energy", "[", 
+          RowBox[{"[", "j", "]"}], "]"}], ",", 
+         RowBox[{"IPR", "[", "j", "]"}]}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"j", ",", "1", ",", "dim"}], "}"}]}], "]"}]}], ";"}], "\n", 
+   RowBox[{"ListPlot", "[", 
+    RowBox[{"tab", ",", " ", 
+     RowBox[{"LabelStyle", "\[Rule]", 
+      RowBox[{"Directive", "[", 
+       RowBox[{"Black", ",", "Bold", ",", "Medium"}], "]"}]}], ",", 
+     RowBox[{"PlotStyle", "\[Rule]", "Blue"}], ",", 
+     RowBox[{"AxesLabel", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{"\"\<Energy\>\"", ",", "\"\<IPR\>\""}], "}"}]}], ",", " ", 
+     RowBox[{"PlotRange", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "150"}], "}"}]}]}], "]"}]}]}]], "Input",
+ CellChangeTimes->{{3.6795414180536003`*^9, 3.679541476614041*^9}, {
+   3.679541513527505*^9, 3.679541516358865*^9}, {3.6795415515190496`*^9, 
+   3.6795415741422606`*^9}, {3.6795416063019023`*^9, 
+   3.6795418891674123`*^9}, {3.6795419330010757`*^9, 
+   3.6795419366182003`*^9}, {3.679542632505748*^9, 3.6795426325947585`*^9}, {
+   3.6795426704947605`*^9, 3.6795426801900187`*^9}, {3.679543185986081*^9, 
+   3.6795432045067368`*^9}, {3.6795432653671155`*^9, 3.6795433638169937`*^9}, 
+   3.67954351247766*^9, {3.6795435972193556`*^9, 3.679543633195176*^9}, {
+   3.679543675309412*^9, 3.679543702635792*^9}, 3.6795437516410165`*^9, {
+   3.6795444684679956`*^9, 3.6795444699901924`*^9}, {3.6795445102596455`*^9, 
+   3.6795445369961247`*^9}, {3.6795446135589404`*^9, 3.6795446322767267`*^9}}],
+
+Cell[BoxData[
+ GraphicsBox[
+  {RGBColor[0, 0, 1], PointBox[CompressedData["
+1:eJwt13k0FNz/B3B76CG00kJKkVZKEu6n7GbMmI0ZZN9KiqSkQj+tZH30FJXs
+2xSSIg/uUGmzk4jsS8i+Zf/5nmfuOffc8/rn/vG57/O59263P0914uPh4VlY
+mf9bYxRIVt/y/+LM51gk1n03hBhanqKKiChnE4/e31U+ekB4ZnL+t90qzvBa
+8VPjt05Aii5TskB4FWef54OGU0QS2KRni1JEBTlLcz4qwNYDRZfNLIEWAU6S
+NmHYwFsfQux4dCvDBDjCSb/eJZRS4Gu6j3KyjQDQy0sCQ21sYcAztJWmxs9p
+OH8wg+GgD5tPXbX0quWDXQpzVvuJdvBh7cbFwgQ+zu74DWmrt9Lhm4mby9on
+fBzFE59HKUFEmJ6QH8u6xsdJWnhFuBt0Am4PvXeXEePjRPaKsMNdDKB9xPL8
+qee8nLlw/7O8sXTwGjBz/X6al5PeqHb07lkGeGT2FWSa8cKaZuNj8kOnwOtz
+VL2YCi9EEVNSTsZZgIeb+4n3P3g4t5vqqzvfkiDvUeMDIxoP50b/iE8bxxCC
+AxJqRQ7ycFScDKY+/CSD+hdKUcqvZfSz8bGmZK85HOT6l3KNcNNFCzhxOjC/
+13cZTxQ81t5FJ4G1T45OmfcyZibHjvNq0cEvKg84rUsoqO/YJv9CBmyNHgs7
+Or2I1UUHP47fMAcpAZcb3f8uov1PUzLySEwY4f/PL4SOilCqmaDy18N7JMNF
+rJl5p0Z4wAhay/Pi3i0t4DuZF1qkMiwgpMj+Q/riAtK0ldRyum0BcW63nQIm
+F/BT63Cr6h4m1DU7L9LNF9D0S73+c45WUMV10YvvgqqXWHD6pExWyOg8PtW6
+2U2zlwi+F6Wdql/OIyeHTU80x83BXmxIZa3CPP5Bfta5Y5gEOtV2q7pl55Hi
+10PnZZNp8PXpbV7Gpzmsbj1ON3VnwUJvzLnGV3Mos+xLGVXfHIa57tVO7Bbc
+YAKmglqGKWfnsIBsvGZGuyU09zpfObNnDi86vvRaMKRCE9dVmgohvUtUeLQQ
+o3N5xxzecviQ1tMmc7Bwd01na8+iTUhGWE6MBrpcL85O5gauOgWVAs9ri47N
+omVpv0ShDCaYCTmcGCr4g4/vFGVrU1mQ9d5TLSj5D/6oYn1tMM8AHnQKiPUa
+/UHZvoO60ywzoFfyCPpNzOB72zY2wKOVehnvK67vn0EHLT1oq1yYUCMrR1B9
+M4PfLvbMKRPMoS3icK25wQyakdPLDZ7Wh4maWF89jRlMRclCDUImEHA7s9R3
+bhrlRNDcs0aocJbrZxHZ28KUqLCh8Ge0c/E0EmkzMf0gYAyrub4+SE74h8OE
+GVtBOZ+iaTz3qFHkhrIuzC0dE02Kn8Z5b+ayZCVo8IfrtxvbqlUTqNCaqam0
+K3oaO5xxVT/7wxy8JWNmvEKn8ZrdQ/17b52EO9+aShcCppDHZakrr6zJ4Me1
+6mFyVEoZDQKGmz67aU/hCXZBRkkBAx62Dw1yZKdQ5mvNtGQpBkSMHOEIrptC
+EWnuFuq6TBBzTH+vFTqJ+dajW21PdYDU3Xxm8f4k0rPZO1A8qQ9xb1c5Rl+Z
+RNaKI298o01B8uaiPclhEpevF68MOU4Bca4hY+Cu2Q4KKB62rWWITOKcI1u2
+rYthgUSiLSuZfxI3ukft+3uGANLOMpbiyxMIJSUL9dqaQUqISiwrbAKJqla/
+YMuR4ejhBKndvhP4XZHG8WwzQ1CQ/fSznDKBpUeft192ZYIf/9Ga2j/jKEPj
+2sLdJDpc4Vpw+kj9ryAtCBxN0yhpGMfhxecaS2f0YN9ycurTmnGcIudN13Vm
+gNRRIUJn1Thq/VeD76qBKfBwfTa1S3z2LRWurLspdixgHONUnQMepwlQKir7
+PnPfOD7Tb3RC9qEJvOX6UUn5d7LDSp7n8vC72THcTTyJUlVJ8PbwqP1d1zHc
+x67INDAhgP+8ZECj9Rhq/Fv7p7gWBS5w7SN+lWWz2QTQ1GorTBpD3q6cAtuV
+PNyXCfpXTm0Mkfmijow3G0N0+KCy3fIosqUFOHRmmQIoXNoY4z+KdnYKExo+
+UmDQ+KYg8dwoUr6ztTLegApZOzf+zEGjqGt0vLc1mAR3EtZXkA6NomN7UkV3
+OZBB9OJG8XzeUVwkVNKXoUmBsDG97Af9I9iwO91V19kC7nLdqn1Ia9yPAIoR
+WzcfeTuCFW+FSvn3MuHr/oVdihdG8OzIX583hejAIXnDGon1I+jz1iVvisTK
++XOd4lCxPN6tCamu2/5YfhzGU2VzzFo/Gjx5cS/hR/ow9ghTdHuafxLycg2N
+ODzDWKzpWdtFPhbMNWjc+DU4hMMJxD3JKjSwLMcwUTiEMp85fZU4fgK0ufZo
+Ix14sJcIn5+rZU+7DmFrhcx7yQknoaK+vax18TdijlOsf9+kQDHXAYvflc6G
+mMDQ8v/GIP4143BzstMU9pHE15aHDKJSWqLj7FU9cFsbHPjSbxATSqKNLUTI
+kKY2cJGoM4jceixjD/OQoC4q8Oba/gGsFOn0blmUAV2GH51lXg3gXsc0SV0J
+BqQEXhpNuzaA61srGp7km0I018zX/3rZzzPgkkHXXhuXASS962b+ZQ0SpExl
+fX0jO4C0Pn+O4fSagbjzff0wyQHkpdCZnpJlDKJc00kuRu9/MOAgr1L8t4f9
+6LSSWpO/PRFO5OQwyfr9iDgoEaPaYgQHPLZLp2n2IztW6gcykQpf9ixJnl3X
+jyg2WxwFq3ThE9d6q1TVwuMJcFtzt/Bpnn589nr+rWR5BjgMebmsXvqFncsc
++txiTYDF9WaWW77VcSb037+4zrCvD2U0uYd7KRPhNG1txUhKH163Y+eh1+cZ
+sFC75dKRpD7kpPTBUlaRDlW19xhr7fvwBj3XktASIxCKyZ4ePdiHy/Pac6f2
+UkGZ5jwQuqkX30475NiSawK7uFYSWK/qgmiwpP9M63FbD3YJHQqd3E8FvwC7
++JGvPTiz+d1jM1sKRC1K+Sun9eCXDzP91cg0yCAdcfxG6EGibXGX4rabwj9c
+Tyr9vefNFkPY/bD3q+jzblR/Zfxxnj4FtnPtfdDozhLbDApcGC3rQ7pR2gfW
+i5yNRMjl2p01dvG1PAHUlZ3Y/HbduPfblGSUEgt25jjNrj7ajRSONVmNfiRD
+qO9xocjSLuxkp+EmxmMMVhEpuVfDu3CjdkFY3cp+hjvDam0tu/BMc5BX5iwN
+/CdcG/ihC/df+mqf3kgFm8F9wd3SXcghdUA4eZ0JNEh7ePn8Xyeyj/MMiNxG
+h+g9/2ziMepEhzx32sR8MQTpVotdpMQO3C+nI+cEdOAtPnWk170DLWxRaA0q
+IsNE0X9W13+Q7bmJAWv2q3uLuXSgdLUnlQ48ptBycduSB3SgJt6AdrY4GdxK
+Q/J9tDuwyditSIUyOtiEX0sK29OBK11/bDq+kt+AucyYJ6XtKKi95wvlBAUG
+wuIHnZ614y6nfU/8pw2hj2tC8GPrm/kmgMOeElpT27CESeqE60sTmP2myJ8e
+2IqtOH1F+v9SYIJr7avnehte0uDA3y0cHWorYvswpwz4KTBDkuR9t6EVy57t
+Q8EadEgO94qLf/ATjYim3FFQpoDkR8tdwnw/0e+HqwNu3SfCS5NkERufZrz0
+3CqE3GwABw980pFd14yuHZhpWPeYBA7X27ekR/1ASJvl3XKeAvZcO4aIUmu8
+6DBp06IYa/IDj+ckeipMUMBn7saH2rIm/NdHjfY5qjU0d291nbjXhGKN79D4
+T5FA9VzR7468RrSnUGoub7sxKHKdosEjMyWpD43nHJLFYxqx+29W8WZzItRx
+vdpO1LROhQqObPWa73KN2K4wY+5AhR4Mt0n38H/5jq1Efe1eqhrAhNSTM+rl
+Dfihqt/RAEcWdO13k5/PbkBBBb9+8j02hW9cy7+IFZio0YEdEntv/fJowAVj
+J99X25iBxO43W5376lFkoMv6+9pmULK48UpnYj0aUv5QrithAm54Y7POcB3K
+zUwY7+k2glmCvIZvYh3OenA1WO4MBX4T12iyn9bhjMBHuoKr6GDQ5WaeuqsO
+rWEdN5L5RQcdrj9T3okYv6JB4qiTdJZnLaoRm7jz048EC0m/O0o8alHHafJC
+gbIpdJeNktrtatE8Y//z1GB1KHHsK/eOr8bihVnF2VVmoDssIkPPqMLshZwX
+vEVU4PkoRI6ZqMRa3mOBwWwjGCz7zxxifkrcZSZEXrPpWPW9EjFYqnXKHiT4
+h8E5FNdUgYJlh1r2/0OEMK5F92+8rqBDhwxFzcG7lRXYz8qMo48IcHDzUmu7
+UgXukBFTmoilwbKrX0+JQjnKD0RCPovmYDXV/HYp4gve0D+dx6NFBRrXaU15
+f4bZZNB/ofpCIegzPrdsWsiOpIFDNMdqYfATJrilHJJ/ZAiXzvAplDz6hN60
++lXomdKg6ov6mos6ZVjKMulm7KAhlHLtbh0pXnmBCi0+qi190mVYLbSbQEvT
+h6TiL+GMAx+w2skfq5r/YoK6zNC9C7gU7d76ujS8e6W+JrN71eY5KDRgg+R9
+Kyqkvjdgm/MX48Me16yrVu63kSLxstufilBu6B2Lal1T6OVaO9FWvlpQDxiF
+X5pj9AvxdZn27rA95pC9XctzSbEQe9U8SpsWWnkvcj22LZ3Y5kqFLtKS/J7r
+Bajj8pJln8TK/4/rhaInezdX0yG0aFranPEW0XkLhNfWU+DSfqXKNPd89Dvs
+8FOR7xRw4LpBz9WabUcDX3O+/ozsPFzVnlGfF6UPkRdE/LLO5aGe4OuvTn40
+hQCuzfYaZzlTyaCSS4v4JPsak/WXv+Oilf4RE7e1YzkbDURG7Db9yoCl+KBa
+2/IsdMYnN2E3jx5ob6s2eOjPxmGiR0uiw1gAHUMRBoKJWKmxh378GRM8yInS
+pWNxKLX/h7CrpylU9m8nMJVj0RY17eLXN6mgYvna64XEQ5w6dnnAhc2EeYv/
+HBi+6XyOAAN2unty/ryLxMbpJ3vs2hnw/wNs2a4=
+    "]]},
+  AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+  Axes->True,
+  AxesLabel->{
+    FormBox["\"Energy\"", TraditionalForm], 
+    FormBox["\"IPR\"", TraditionalForm]},
+  LabelStyle->Directive[
+    GrayLevel[0], Bold, Medium],
+  PlotRange->{0, 150},
+  PlotRangeClipping->True]], "Output",
+ CellChangeTimes->{
+  3.679544550689907*^9, {3.6795446195279875`*^9, 3.6795446373816595`*^9}}]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{1584, 763},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+FrontEndVersion->"8.0 for Microsoft Windows (64-bit) (November 7, 2010)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[579, 22, 183, 3, 99, "Title"],
+Cell[CellGroupData[{
+Cell[787, 29, 722, 15, 64, "Item"],
+Cell[1512, 46, 271, 9, 64, "Item"],
+Cell[1786, 57, 138, 2, 30, "Item"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[1961, 64, 14182, 385, 1252, "Input"],
+Cell[16146, 451, 5522, 97, 249, "Output"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)

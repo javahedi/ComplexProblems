@@ -1,0 +1,61 @@
+0 =  champ magnétique (non programme). Halide Perovskite, Boyer-Richard J. Phys. Chem. Lett. 2016, 7, 3833−3840
+2    nb de types d'atomes differents
+=========
+1  1           numero (type) des 2 types atomes
+2.5001 = dist_voisin  = distance voisin max (unite de a) entre ces deux atomes
+# V         q        dmin            Rcut (unite de a)  
+ 0.00000    0.0      0.5       100.0  Vsss = v(1)   v(1)
+ 0.00000    0.0      0.5       100.0  Vsps = v(2)   v(2)   s(1)-p(2) 
+ 0.00000    0.0      0.5       100.0  Vpss = v(3)          p(1)-s(2) = Vsps = v(2) si 1 et 2 meme atomes
+ 0.00000    0.0      0.5       100.0  Vpps = v(4)   v(3) 
+-1.01  3.137   0.57735    2.0    Vppp = v(5)   v(4)
+ 0.00000    0.0      0.0       100.0  Vsds = v(6)   v(5)   s(1)-d(2) 
+ 0.00000    0.0      0.0       100.0  Vdss = v(7)          d(1)-s(2) = Vsds = v(6) si 1 et 2 meme atomes
+ 0.00000    0.0      0.0       100.0  Vpds = v(8)   v(7)   p(1)-d(2)              
+ 0.00000    0.0      0.0       100.0  Vdps = v(9)          d(1)-p(2) = Vpds = v(8) si 1 et 2 meme atomes
+ 0.00000    0.0      0.0       100.0  Vpdp = v(10)  v(8)   p(1)-d(2)                    
+ 0.00000    0.0      0.0       100.0  Vdpp = v(11)         d(1)-p(2) = Vpdp = v(10) si 1 et 2 meme atomes
+ 0.00000    0.0      0.0       100.0  Vdds = v(12)  v(9)                        
+ 0.00000    0.0      0.0       100.0  Vddp = v(13)  v(10)                        
+ 0.00000    0.0      0.0       100.0  Vddd = v(14)  v(11)
+=========
+2 2            numero (type) des 2 types atomes
+2.5001 = dist_voisin  = distance voisin max (unite de a) entre ces deux atomes
+# V         q        dmin            Rcut (unite de a)
+ 0.00000    0.0      0.5       100.0  Vsss = v(1)   v(1)
+ 0.00000    0.0      0.5       100.0  Vsps = v(2)   v(2)   s(1)-p(2)
+ 0.00000    0.0      0.5       100.0  Vpss = v(3)          p(1)-s(2) = Vsps = v(2) si 1 et 2 meme atomes
+ 0.00000    0.0      0.5       100.0  Vpps = v(4)   v(3)
+-1.01  3.137   0.57735    2.0    Vppp = v(5)   v(4)
+ 0.00000    0.0      0.0       100.0  Vsds = v(6)   v(5)   s(1)-d(2)
+ 0.00000    0.0      0.0       100.0  Vdss = v(7)          d(1)-s(2) = Vsds = v(6) si 1 et 2 meme atomes
+ 0.00000    0.0      0.0       100.0  Vpds = v(8)   v(7)   p(1)-d(2)
+ 0.00000    0.0      0.0       100.0  Vdps = v(9)          d(1)-p(2) = Vpds = v(8) si 1 et 2 meme atomes
+ 0.00000    0.0      0.0       100.0  Vpdp = v(10)  v(8)   p(1)-d(2)
+ 0.00000    0.0      0.0       100.0  Vdpp = v(11)         d(1)-p(2) = Vpdp = v(10) si 1 et 2 meme atomes
+ 0.00000    0.0      0.0       100.0  Vdds = v(12)  v(9)
+ 0.00000    0.0      0.0       100.0  Vddp = v(13)  v(10)
+ 0.00000    0.0      0.0       100.0  Vddd = v(14)  v(11)
+=========
+1  2          numero (type) des 2 types atomes
+2.5001 = dist_voisin  = distance voisin max (unite de a) entre ces deux atomes
+# V         q        dmin            Rcut (unite de a)
+ 0.00000    0.0      0.5       100.0  Vsss = v(1)   v(1)
+ 0.00000    0.0      0.5       100.0  Vsps = v(2)   v(2)   s(1)-p(2)
+ 0.00000    0.0      0.5       100.0  Vpss = v(3)          p(1)-s(2) = Vsps = v(2) si 1 et 2 meme atomes
+0.48  7.4006  1.36345  2.0   Vpps = v(4)   v(3)
+-1.01  3.137   0.57735    2.0    Vppp = v(5)   v(4)
+ 0.00000    0.0      0.0       100.0  Vsds = v(6)   v(5)   s(1)-d(2)
+ 0.00000    0.0      0.0       100.0  Vdss = v(7)          d(1)-s(2) = Vsds = v(6) si 1 et 2 meme atomes
+ 0.00000    0.0      0.0       100.0  Vpds = v(8)   v(7)   p(1)-d(2)
+ 0.00000    0.0      0.0       100.0  Vdps = v(9)          d(1)-p(2) = Vpds = v(8) si 1 et 2 meme atomes
+ 0.00000    0.0      0.0       100.0  Vpdp = v(10)  v(8)   p(1)-d(2)
+ 0.00000    0.0      0.0       100.0  Vdpp = v(11)         d(1)-p(2) = Vpdp = v(10) si 1 et 2 meme atomes
+ 0.00000    0.0      0.0       100.0  Vdds = v(12)  v(9)
+ 0.00000    0.0      0.0       100.0  Vddp = v(13)  v(10)
+ 0.00000    0.0      0.0       100.0  Vddd = v(14)  v(11)
+=========
+
+
+
+
